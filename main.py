@@ -56,17 +56,8 @@ except Exception:
 
 from ui.main_window import MainWindow
 db = SessionLocal()
-window = MainWindow(db)
+window = MainWindow(db, server_ip=SERVER_IP)
 window.show()
-
-# Notify user of server IP
-QMessageBox.information(window, "خادم الجوال",
-    f"تم تشغيل خادم الجوال بنجاح\n"
-    f"افتح تطبيق Uhtred Store على جوالك وأدخل عنوان IP:\n"
-    f"\n"
-    f"  {SERVER_IP}:5000\n"
-    f"\n"
-    f"تأكد أن الجوال متصل بنفس شبكة WiFi")
 
 exit_code = app.exec()
 db.close()

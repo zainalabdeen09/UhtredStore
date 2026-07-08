@@ -12,7 +12,7 @@ echo [*] تثبيت PyInstaller...
 pip install pyinstaller
 
 echo [*] بناء التطبيق...
-pyinstaller --name "UhtredStore" --windowed --onefile --icon resources\icon.png --add-data "resources;resources" --add-data "ui;ui" main.py
+pyinstaller --name "UhtredStore" --windowed --onefile --icon resources\icon.png --add-data "resources;resources" --add-data "ui;ui" --add-data "mobile;mobile" --hidden-import flask_cors --hidden-import mobile.app main.py
 
 echo.
 echo [✓] تم! ملف EXE موجود بمجلد: dist\UhtredStore.exe
