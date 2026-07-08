@@ -1,38 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-
-    <group
-        android:translateX="20"
-        android:translateY="20">
-
-        <!-- Store building body -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M10,60 L10,30 L34,10 L58,30 L58,60 L44,60 L44,46 L24,46 L24,60 Z" />
-
-        <!-- Roof -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M6,32 L34,8 L62,32 L58,35 L34,14 L10,35 Z" />
-
-        <!-- Door -->
-        <path
-            android:fillColor="#0ea5e9"
-            android:pathData="M30,60 L30,44 L38,44 L38,60 Z" />
-
-        <!-- Window left -->
-        <path
-            android:fillColor="#0ea5e9"
-            android:pathData="M14,36 h8 v8 h-8 Z" />
-
-        <!-- Window right -->
-        <path
-            android:fillColor="#0ea5e9"
-            android:pathData="M46,36 h8 v8 h-8 Z" />
-
-    </group>
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="72dp"
+        android:height="72dp"
+        android:gravity="center">
+        <bitmap
+            android:src="@drawable/icon"
+            android:gravity="center" />
+    </item>
+</layer-list>

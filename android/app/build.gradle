@@ -19,6 +19,7 @@ android {
             pip {
                 install "flask"
                 install "flask-cors"
+                install "sqlalchemy"
             }
         }
 
