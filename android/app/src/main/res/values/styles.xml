@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="windowBackground">#0f172a</color>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+    <style name="LoadingOverlay" parent="AppTheme">
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+</resources>
