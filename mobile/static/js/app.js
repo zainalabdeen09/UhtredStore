@@ -1,5 +1,5 @@
 const state = {
-  token: localStorage.getItem('token'),
+  loggedIn: localStorage.getItem('uhtred_logged_in') === '1',
   currentPage: 'dashboard',
   cart: [],
   products: [],
@@ -10,6 +10,32 @@ const state = {
 };
 const API_BASE = '';
 function h() { return { 'Content-Type': 'application/json' }; }
+
+if (state.loggedIn) { document.getElementById('login-overlay').style.display = 'none'; }
+
+async function doLogin() {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value.trim();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  if (!u || !p) { errEl.textContent = 'أدخل اسم المستخدم وكلمة المرور'; return; }
+  btn.disabled = true; errEl.textContent = '';
+  try {
+    const r = await fetch('/api/auth/login', { method: 'POST', headers: h(), body: JSON.stringify({ username: u, password: p }) });
+    const d = await r.json();
+    if (d.success) {
+      localStorage.setItem('uhtred_logged_in', '1');
+      state.loggedIn = true;
+      document.getElementById('login-overlay').style.display = 'none';
+      renderPage('dashboard');
+    } else {
+      errEl.textContent = 'اسم المستخدم أو كلمة المرور خطأ';
+    }
+  } catch (e) {
+    errEl.textContent = 'خطأ في الاتصال: ' + e.message;
+  }
+  btn.disabled = false;
+}
 async function g(e) { const r = await fetch(API_BASE + '/api' + e, { headers: h() }); if (!r.ok) { const d = await r.json().catch(() => ({ error: r.statusText })); throw new Error(d.error || 'Request failed'); } return r.json(); }
 async function p(e, d) { const r = await fetch(API_BASE + '/api' + e, { method: 'POST', headers: h(), body: JSON.stringify(d) }); if (!r.ok) { const ed = await r.json().catch(() => ({ error: r.statusText })); throw new Error(ed.error || 'Request failed'); } return r.json(); }
 async function put(e, d) { const r = await fetch(API_BASE + '/api' + e, { method: 'PUT', headers: h(), body: JSON.stringify(d) }); if (!r.ok) { const ed = await r.json().catch(() => ({ error: r.statusText })); throw new Error(ed.error || 'Request failed'); } return r.json(); }
@@ -52,10 +78,13 @@ window.addEventListener('popstate', function(e) {
 });
 
 function logout() {
-  localStorage.removeItem('token');
-  state.token = null;
+  localStorage.removeItem('uhtred_logged_in');
+  state.loggedIn = false;
   closeSidebar();
-  renderPage('dashboard');
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').textContent = '';
 }
 
 function renderPage(page) {

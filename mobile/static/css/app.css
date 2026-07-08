@@ -188,6 +188,30 @@ tr:hover { background: var(--bg3); }
   .pos-item { padding: 7px; }
 }
 
+/* Login overlay */
+#login-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+}
+.login-box {
+  background: var(--bg2); border-radius: var(--radius); padding: 32px 24px;
+  width: 320px; max-width: 90vw; text-align: center;
+  border: 1px solid var(--bg3);
+}
+.login-logo { font-size: 24px; font-weight: 700; color: var(--primary); }
+.login-subtitle { font-size: 13px; color: var(--text2); margin: 8px 0 24px; }
+.login-input {
+  width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--bg3);
+  border-radius: 6px; color: var(--text); font-size: 14px; margin-bottom: 12px;
+}
+.login-input::placeholder { color: var(--text2); }
+.login-btn {
+  width: 100%; padding: 12px; background: var(--primary); color: #fff;
+  border: none; border-radius: 6px; font-size: 16px; cursor: pointer;
+}
+.login-btn:disabled { opacity: 0.5; }
+.login-error { color: var(--danger); font-size: 13px; margin-bottom: 8px; min-height: 20px; }
+
 @media (min-width: 769px) {
   #sidebar { right: 0; position: relative; }
   #sidebar-overlay { display: none !important; }

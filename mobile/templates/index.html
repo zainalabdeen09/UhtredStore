@@ -78,6 +78,17 @@
 
     <div id="toast-container"></div>
 
-    <script src="/static/js/app.js?v=2"></script>
+    <div id="login-overlay">
+      <div class="login-box">
+        <div class="login-logo">Uhtred Store</div>
+        <div class="login-subtitle">نظام إدارة المبيعات</div>
+        <input type="text" id="login-username" class="login-input" placeholder="اسم المستخدم" autocomplete="username" onkeydown="if(event.key==='Enter') document.getElementById('login-password').focus()">
+        <input type="password" id="login-password" class="login-input" placeholder="كلمة المرور" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+        <div id="login-error" class="login-error"></div>
+        <button id="login-btn" class="login-btn" onclick="doLogin()">دخول</button>
+      </div>
+    </div>
+
+    <script src="/static/js/app.js?v=3"></script>
 </body>
 </html>
