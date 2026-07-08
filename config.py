@@ -5,6 +5,11 @@ from pathlib import Path
 if getattr(sys, 'frozen', False):
     BASE_DIR = Path(sys._MEIPASS)
     APP_DIR = Path(os.path.dirname(sys.executable))
+    # If data/ not in EXE dir, try parent (for dist/UhtredStore.exe case)
+    if not (APP_DIR / "data").exists():
+        parent_data = APP_DIR.parent / "data"
+        if parent_data.exists():
+            APP_DIR = APP_DIR.parent
 else:
     BASE_DIR = Path(__file__).resolve().parent
     APP_DIR = BASE_DIR

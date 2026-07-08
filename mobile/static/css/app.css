@@ -172,11 +172,19 @@ tr:hover { background: var(--bg3); }
 @media print { #app-header, #sidebar, #menu-btn { display: none !important; } }
 
 /* Responsive: narrow screens */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .pos-container { flex-direction: column; }
-  .pos-cart { width: 100%; min-width: unset; max-height: 50vh; }
+  .pos-cart { width: 100%; min-width: unset; max-height: 40vh; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
-  .pos-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .pos-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .pos-item { padding: 6px; }
+  .pos-item-name { font-size: 11px; }
+  .pos-item-price { font-size: 10px; }
+  .cart-item { font-size: 12px; }
+}
+@media (max-width: 768px) {
+  .pos-grid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); }
+  .pos-item { padding: 7px; }
 }
 
 @media (min-width: 769px) {
