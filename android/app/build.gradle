@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'com.chaquo.python'
 }
 
 android {
@@ -11,36 +10,13 @@ android {
         applicationId 'com.uhtred.store'
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName '1.0.0'
-
-        python {
-            buildPython "python3"
-            pip {
-                install "flask"
-                install "flask-cors"
-                install "sqlalchemy"
-            }
-        }
-
-        ndk {
-            abiFilters "arm64-v8a", "x86_64"
-        }
-
-        sourceSets {
-            main {
-                python.srcDir "src/main/python"
-            }
-        }
+        versionCode 2
+        versionName '2.0.0'
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            debuggable true
         }
     }
 
@@ -48,17 +24,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
-    packaging {
-        resources {
-            excludes += ['META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
-        }
-    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.webkit:webkit:1.9.0'
     implementation 'androidx.core:core:1.12.0'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.preference:preference:1.2.1'
 }

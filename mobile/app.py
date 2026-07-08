@@ -56,7 +56,4 @@ if __name__ == '__main__':
     print(f'  Computer: http://localhost:5000')
     print(f'  Phone:    http://{ip}:5000')
     print('=' * 50)
-    print('  افتح الرابط على جوالك (نفس شبكة WiFi)')
-    print('  واضغط Add to Home Screen')
-    print('=' * 50)
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
