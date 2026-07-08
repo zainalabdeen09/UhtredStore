@@ -36,7 +36,7 @@ function closeSidebar() {
   }
 }
 
-function navigateTo(page) {
+function navigateTo(page, push = true) {
   state.currentPage = page;
   document.getElementById('page-title').textContent = document.querySelector(`.sidebar-item[data-page="${page}"]`)?.textContent.trim() || page;
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
@@ -44,7 +44,12 @@ function navigateTo(page) {
   if (active) active.classList.add('active');
   closeSidebar();
   renderPage(page);
+  if (push) history.pushState({ page }, '', '/#' + page);
 }
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.page) { navigateTo(e.state.page, false); }
+});
 
 function logout() {
   localStorage.removeItem('token');
