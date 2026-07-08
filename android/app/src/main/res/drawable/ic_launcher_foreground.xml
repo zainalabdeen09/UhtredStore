@@ -25,20 +25,14 @@
             android:pathData="M30,60 L30,44 L38,44 L38,60 Z" />
 
         <!-- Window left -->
-        <rect
+        <path
             android:fillColor="#0ea5e9"
-            android:width="8"
-            android:height="8"
-            android:x="14"
-            android:y="36" />
+            android:pathData="M14,36 h8 v8 h-8 Z" />
 
         <!-- Window right -->
-        <rect
+        <path
             android:fillColor="#0ea5e9"
-            android:width="8"
-            android:height="8"
-            android:x="46"
-            android:y="36" />
+            android:pathData="M46,36 h8 v8 h-8 Z" />
 
     </group>
 </vector>
