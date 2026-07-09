@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-BASE = Path(sys._MEIPASS if getattr(sys, 'frozen', False) else __file__).resolve().parent
+BASE = Path(sys._MEIPASS if getattr(sys, 'frozen', False) else Path(__file__).resolve().parent.parent)
 sys.path.insert(0, str(BASE))
 
 from flask import Flask, send_from_directory, render_template
