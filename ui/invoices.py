@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QDateEdit
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QDateEdit, QMessageBox
 from PySide6.QtCore import Qt, QDate
-from models import Invoice
+from models import Invoice, InvoiceItem, Product, StockMovement
 from utils.invoice_printer import preview_invoice
 from utils.helpers import get_setting
 
@@ -64,6 +64,11 @@ class InvoicesPage(QWidget):
             print_btn.setFixedWidth(40)
             print_btn.clicked.connect(lambda checked, iid=inv.id: self.print_invoice(iid))
             btn_layout.addWidget(print_btn)
+            del_btn = QPushButton("🗑️")
+            del_btn.setFixedWidth(40)
+            del_btn.setObjectName("btnDanger")
+            del_btn.clicked.connect(lambda checked, iid=inv.id: self.delete_invoice(iid))
+            btn_layout.addWidget(del_btn)
             self.table.setCellWidget(i, 5, btn_widget)
 
     def print_invoice(self, invoice_id):
@@ -99,3 +104,28 @@ class InvoicesPage(QWidget):
             "store_address": get_setting(self.db, "store_address", ""),
         }
         preview_invoice(inv_dict, store_dict, self)
+
+    def delete_invoice(self, invoice_id):
+        inv = self.db.query(Invoice).filter(Invoice.id == invoice_id).first()
+        if not inv:
+            return
+        reply = QMessageBox.question(self, "تأكيد الحذف",
+            f"هل تريد حذف الفاتورة {inv.invoice_number}؟\nسيتم إرجاع الكميات للمخزون.",
+            QMessageBox.Yes | QMessageBox.No)
+        if reply != QMessageBox.Yes:
+            return
+        for item in inv.items:
+            if item.product_id:
+                product = self.db.query(Product).filter(Product.id == item.product_id).first()
+                if product:
+                    product.current_stock += item.quantity
+                    movement = StockMovement(
+                        product_id=item.product_id, type='in',
+                        quantity=item.quantity,
+                        reference=f"DELETE-{inv.invoice_number}",
+                        notes='إلغاء فاتورة'
+                    )
+                    self.db.add(movement)
+        self.db.delete(inv)
+        self.db.commit()
+        self.load_invoices()

@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
     def __init__(self, db, server_ip="127.0.0.1"):
         super().__init__()
         self.db = db
+        self.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
         self.setWindowTitle(f"Uhtred Store - {server_ip}:5000 - نظام إدارة المبيعات")
         self.setMinimumSize(1024, 600)
         self.resize(1200, 700)

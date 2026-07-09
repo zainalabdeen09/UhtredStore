@@ -472,6 +472,7 @@ async function showInvoiceDetail(id) {
           <button class="btn btn-primary btn-sm" onclick="printInvoice(${id})" style="flex:1">🖨️ طباعة</button>
           <button class="btn btn-success btn-sm" onclick="saveInvoiceFile(${id})" style="flex:1">💾 حفظ</button>
           <button class="btn btn-sm" onclick="shareInvoiceFile(${id})" style="flex:1;background:var(--warning);color:#000">📤 مشاركة</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteInvoice(${id})" style="flex:1">🗑️ حذف</button>
         </div>
       </div></div>`;
     document.body.appendChild(ov);
@@ -665,6 +666,18 @@ function changeServerIP() {
     localStorage.setItem('server_url', newUrl);
     window.location.href = newUrl;
   }
+}
+
+async function deleteInvoice(id) {
+  if (!confirm('هل تريد حذف هذه الفاتورة؟\nسيتم إرجاع الكميات للمخزون.')) return;
+  try {
+    await del('/invoices/' + id);
+    toast('تم حذف الفاتورة وإرجاع المخزون', 'success');
+    document.getElementById('modal-overlay')?.remove();
+    const invoices = await g('/invoices');
+    state.invoices = invoices;
+    renderInvTable2(invoices);
+  } catch (e) { toast('خطأ: ' + e.message, 'error'); }
 }
 
 /* ============ INIT ============ */

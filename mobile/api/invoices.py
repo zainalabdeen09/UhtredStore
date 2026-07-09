@@ -178,6 +178,38 @@ def create_invoice():
     finally:
         db.close()
 
+@invoices_bp.route('/<int:invoice_id>', methods=['DELETE'])
+def delete_invoice(invoice_id):
+    db = SessionLocal()
+    try:
+        inv = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+        if not inv:
+            return jsonify({'error': 'الفاتورة غير موجودة'}), 404
+
+        # Restore stock for each item
+        for item in inv.items:
+            if item.product_id:
+                product = db.query(Product).filter(Product.id == item.product_id).first()
+                if product:
+                    product.current_stock += item.quantity
+                    movement = StockMovement(
+                        product_id=item.product_id,
+                        type='in',
+                        quantity=item.quantity,
+                        reference=f"DELETE-{inv.invoice_number}",
+                        notes='إلغاء فاتورة'
+                    )
+                    db.add(movement)
+
+        db.delete(inv)
+        db.commit()
+        return jsonify({'message': 'تم حذف الفاتورة وإرجاع المخزون'})
+    except Exception as e:
+        db.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        db.close()
+
 @invoices_bp.route('/<int:invoice_id>/print', methods=['GET'])
 def print_invoice(invoice_id):
     db = SessionLocal()
