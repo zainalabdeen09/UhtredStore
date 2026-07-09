@@ -24,6 +24,15 @@ def seed_initial_data():
     if not inspector.has_table("settings"):
         return
 
+    # Migrate: add image column to products if missing
+    if inspector.has_table("products"):
+        cols = [c["name"] for c in inspector.get_columns("products")]
+        if "image" not in cols:
+            from sqlalchemy import text
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE products ADD COLUMN image VARCHAR(500) DEFAULT ''"))
+                conn.commit()
+
     # Migrate: add customer_address column if missing
     if inspector.has_table("invoices"):
         cols = [c["name"] for c in inspector.get_columns("invoices")]

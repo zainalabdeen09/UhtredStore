@@ -37,6 +37,7 @@ class Product(Base):
     sell_price = Column(Float, default=0.0)
     current_stock = Column(Integer, default=0)
     min_stock = Column(Integer, default=5)
+    image = Column(String(500), default="")  # filename in data/product_images/
     sizes = Column(Text, default="")       # JSON: ["S","M","L","XL"]
     colors = Column(Text, default="")      # JSON: ["أحمر","أزرق","أسود"]
     print_locations = Column(Text, default="")  # JSON: ["أمامي","خلفي","كم"]

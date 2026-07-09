@@ -1,7 +1,10 @@
 import json
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QDialog, QFormLayout, QDoubleSpinBox, QSpinBox, QMessageBox, QTextEdit
+from pathlib import Path
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QDialog, QFormLayout, QDoubleSpinBox, QSpinBox, QMessageBox, QTextEdit, QFileDialog
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 from models import Product, Category, StockMovement
+from config import PRODUCT_IMAGES_DIR
 
 
 class ProductsPage(QWidget):
@@ -29,8 +32,8 @@ class ProductsPage(QWidget):
         layout.addLayout(toolbar)
 
         self.table = QTableWidget()
-        self.table.setColumnCount(8)
-        self.table.setHorizontalHeaderLabels(["#", "الاسم", "الصنف", "سعر الشراء", "سعر البيع", "المخزون", "الحد الأدنى", "خيارات"])
+        self.table.setColumnCount(9)
+        self.table.setHorizontalHeaderLabels(["#", "الصورة", "الاسم", "الصنف", "سعر الشراء", "سعر البيع", "المخزون", "الحد الأدنى", "خيارات"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.setAlternatingRowColors(True)
@@ -47,18 +50,32 @@ class ProductsPage(QWidget):
         products = query.all()
 
         self.table.setRowCount(len(products))
+        self.table.setRowHeight(60)
         for i, p in enumerate(products):
             self.table.setItem(i, 0, QTableWidgetItem(str(p.id)))
-            self.table.setItem(i, 1, QTableWidgetItem(p.name))
+
+            img_label = QLabel()
+            img_label.setFixedSize(50, 50)
+            img_label.setAlignment(Qt.AlignCenter)
+            if p.image:
+                img_path = PRODUCT_IMAGES_DIR / p.image
+                if img_path.exists():
+                    pix = QPixmap(str(img_path)).scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                    img_label.setPixmap(pix)
+            else:
+                img_label.setText("📷")
+            self.table.setCellWidget(i, 1, img_label)
+
+            self.table.setItem(i, 2, QTableWidgetItem(p.name))
             cat_name = p.category.name if p.category else "-"
-            self.table.setItem(i, 2, QTableWidgetItem(cat_name))
-            self.table.setItem(i, 3, QTableWidgetItem(f"{p.buy_price:,.0f}"))
-            self.table.setItem(i, 4, QTableWidgetItem(f"{p.sell_price:,.0f}"))
+            self.table.setItem(i, 3, QTableWidgetItem(cat_name))
+            self.table.setItem(i, 4, QTableWidgetItem(f"{p.buy_price:,.0f}"))
+            self.table.setItem(i, 5, QTableWidgetItem(f"{p.sell_price:,.0f}"))
             stock_item = QTableWidgetItem(str(p.current_stock))
             if p.current_stock <= p.min_stock:
                 stock_item.setForeground(Qt.red)
-            self.table.setItem(i, 5, stock_item)
-            self.table.setItem(i, 6, QTableWidgetItem(str(p.min_stock)))
+            self.table.setItem(i, 6, stock_item)
+            self.table.setItem(i, 7, QTableWidgetItem(str(p.min_stock)))
 
             btn_widget = QWidget()
             btn_layout = QHBoxLayout(btn_widget)
@@ -72,7 +89,7 @@ class ProductsPage(QWidget):
             del_btn.clicked.connect(lambda checked, pid=p.id: self.delete_product(pid))
             btn_layout.addWidget(edit_btn)
             btn_layout.addWidget(del_btn)
-            self.table.setCellWidget(i, 7, btn_widget)
+            self.table.setCellWidget(i, 8, btn_widget)
 
     def add_product(self):
         dialog = QDialog(self)
